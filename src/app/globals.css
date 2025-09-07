@@ -1,26 +1,550 @@
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 2s ease-in-out forwards;
+}
+
 @import "tailwindcss";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Luxury palette */
+  --background: #3b2a20; /* lighter chocolate base */
+  --foreground: #f7ede3; /* creamy ivory text */
+
+  /* Gold spectrum */
+  --gold-50: #fff7e6;
+  --gold-100: #ffe8b8;
+  --gold-200: #ffd47d;
+  --gold-300: #ffcd6b;
+  --gold-400: #ffb93d; /* warm golden glow */
+  --gold-500: #f5a000; /* saffron */
+  --gold-600: #d98d00;
+  --gold-700: #b37600;
+  --gold-800: #8c5d00;
+  --gold-900: #664400;
+
+  /* Rose-gold accent */
+  --rose-gold: #d9a79c;
+
+  /* Cards / Elevation */
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-border: rgba(245, 160, 0, 0.28);
+  --elevation: 0 14px 30px rgba(0,0,0,0.35),
+               0 6px 14px rgba(0,0,0,0.22);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Poppins", sans-serif;
+  --color-gold-500: var(--gold-500);
+  --color-gold-400: var(--gold-400);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ====== GLOBAL BACKGROUND ====== */
+body {
+  background: radial-gradient(circle at top left, #5a3a28 0%, #3b2a20 70%) fixed,
+              linear-gradient(160deg, rgba(245,160,0,0.07) 0%, transparent 60%) fixed,
+              #3b2a20;
+  color: var(--foreground);
+  font-family: "Poppins", sans-serif;
+}
+
+/* ====== TEXT & GOLD EFFECTS ====== */
+.gold-gradient-text {
+  background: linear-gradient(135deg, var(--gold-500), var(--gold-800));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gold {
+  color: var(--gold-500);
+}
+
+.bg-gold {
+  background-color: var(--gold-500);
+}
+
+.bg-gold\/20 {
+  background-color: rgba(245, 160, 0, 0.2);
+}
+
+.hover\:bg-gold-dark:hover {
+  background-color: var(--gold-600);
+}
+
+.from-gold {
+  --tw-gradient-from: var(--gold-500);
+  --tw-gradient-to: var(--gold-500);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-gold-400 {
+  --tw-gradient-to: var(--gold-400);
+}
+
+.to-gold-300 {
+  --tw-gradient-to: var(--gold-300);
+}
+
+.from-gold-400 {
+  --tw-gradient-from: var(--gold-400);
+  --tw-gradient-to: var(--gold-400);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-gold-300 {
+  --tw-gradient-from: var(--gold-300);
+  --tw-gradient-to: var(--gold-300);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+/* Banner title glow (warm golden, subtle pulse) */
+.banner-glow {
+  color: #ffd24d;
+  text-shadow:
+    0 0 6px rgba(255, 210, 77, 0.6),
+    0 0 14px rgba(255, 191, 61, 0.5),
+    0 0 28px rgba(245, 160, 0, 0.35);
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 6px rgba(255, 210, 77, 0.55),
+      0 0 14px rgba(255, 191, 61, 0.45),
+      0 0 26px rgba(245, 160, 0, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 9px rgba(255, 210, 77, 0.8),
+      0 0 18px rgba(255, 191, 61, 0.65),
+      0 0 34px rgba(245, 160, 0, 0.45);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ====== CARD STYLE ====== */
+.card-lux {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 191, 61, 0.07),
+    rgba(59, 42, 32, 0.95)
+  );
+  border: 1px solid var(--card-border);
+  box-shadow: var(--elevation);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-lux:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+}
+
+/* ====== HERO BANNER ====== */
+.hero-banner {
+  background-image: url("/images/1(1).png"),
+    radial-gradient(circle at center, rgba(245, 160, 0, 0.15), transparent 75%);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(245, 160, 0, 0.25);
+  box-shadow: var(--elevation);
+}
+
+/* ====== MOTION PRIMITIVES ====== */
+.reveal-up {
+  animation: reveal-up 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.fade-in {
+  animation: fade-in 500ms ease-out both;
+}
+
+/* ====== SHIMMER EFFECT ====== */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: -200% -50% auto -50%;
+  height: 300%;
+  transform: rotate(20deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  animation: shine-move 2.8s linear infinite;
+}
+
+/* ====== KEYFRAMES ====== */
+@keyframes shine-move {
+  from { transform: translateX(-60%) rotate(20deg); }
+  to { transform: translateX(60%) rotate(20deg); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-12deg); }
+  100% { transform: translateX(200%) skewX(-12deg); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ====== PERFORMANCE OPTIMIZATIONS ====== */
+* {
+  box-sizing: border-box;
+}
+
+/* Optimize font loading */
+@font-face {
+  font-family: 'Poppins';
+  font-display: swap;
+}
+
+/* Hardware acceleration for animations */
+.card-lux,
+.shine,
+.banner-glow {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ====== HYDRATION-SAFE ANIMATIONS ====== */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse-safe 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow-pulse-safe {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* ====== THREE.JS BANNER STYLES ====== */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Modern glassmorphism effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+/* Optimized floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translate3d(0, 0px, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(-10px, -15px, 0) rotate(120deg);
+  }
+  66% {
+    transform: translate3d(10px, -5px, 0) rotate(240deg);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Amazing Glow Effects */
+.glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+  0% {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4), 0 0 40px rgba(255, 215, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8), 0 0 60px rgba(255, 215, 0, 0.4);
+  }
+}
+
+/* Gradient text animation - GPU accelerated */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+  transform: translateZ(0); /* Hardware acceleration */
+}
+
+/* ====== RESPONSIVE IMPROVEMENTS ====== */
+@media (max-width: 768px) {
+  .card-lux {
+    padding: 1rem;
+  }
+  
+  .banner-glow {
+    font-size: clamp(1.5rem, 8vw, 3rem);
+  }
+}
+
+/* ====== LOADING OPTIMIZATIONS ====== */
+.lazy-load {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lazy-load.loaded {
+  opacity: 1;
+}
+
+/* ====== ACCESSIBILITY IMPROVEMENTS ====== */
+.focus-visible:focus {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
+}
+
+/* ====== HYDRATION-SAFE ANIMATIONS ====== */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out both;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-700 {
+  animation-delay: 0.7s;
+}
+
+/* ====== SLICK CAROUSEL CUSTOM STYLING ====== */
+.slick-slider {
+  position: relative;
+}
+
+.slick-list {
+  overflow: hidden;
+}
+
+.slick-track {
+  display: flex;
+}
+
+.slick-slide {
+  height: inherit;
+}
+
+.slick-slide > div {
+  height: 100%;
+}
+
+/* Custom arrow styling for golden theme */
+.slick-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.slick-arrow:hover {
+  background: rgba(245, 158, 11, 0.6);
+  border-color: rgba(245, 158, 11, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slick-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.slick-arrow:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+}
+
+.slick-prev {
+  left: 20px;
+}
+
+.slick-prev:before {
+  border-right: 8px solid rgba(255, 255, 255, 0.9);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  margin-left: -2px;
+}
+
+.slick-next {
+  right: 20px;
+}
+
+.slick-next:before {
+  border-left: 8px solid rgba(255, 255, 255, 0.9);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  margin-left: 2px;
+}
+
+/* Custom dots styling */
+.slick-dots {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex !important;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slick-dots li {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+}
+
+.slick-dots li button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  font-size: 0;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li.slick-active button {
+  background: rgba(245, 158, 11, 0.8);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+}
+
+.slick-dots li button:hover {
+  background: rgba(245, 158, 11, 0.6);
+  transform: scale(1.2);
+}
+
+/* Banner slider specific styling */
+.banner-slider {
+  height: 100%;
+}
+
+.banner-slider .slick-list,
+.banner-slider .slick-track {
+  height: 100%;
+}
+
+.banner-slider .slick-slide {
+  height: 100%;
+}
+
+.banner-slider .slick-slide > div {
+  height: 100%;
+}
+
+/* Hide arrows on mobile */
+@media (max-width: 768px) {
+  .slick-arrow {
+    display: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-lux {
+    border: 2px solid var(--gold-500);
+  }
 }
